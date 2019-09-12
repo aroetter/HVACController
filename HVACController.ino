@@ -107,15 +107,14 @@ void loop() {
 
   // both are heading
   if ((isHeating(nesta) && isHeating(nestb))
-   || (isCooling(nesta) && isCooling(nestb))
-   || (isBlowing(nesta) && isBlowing(nestb))) {
+   || (isCooling(nesta) && isCooling(nestb))) {
     setHVACFromNest(nesta);
     setVent(VENT_A, VENT_OPEN);
     setVent(VENT_B, VENT_OPEN);
     // assert isBlowing(nestA) && isBlowing(nestB)
 
-    snprintf(outbuf, OUTBUF_LEN, "Case 1: Both thermostats are %s",
-      (isHeating(nesta) ? "heating" : (isCooling(nesta) ? "cooling" : "blowing")));
+    snprintf(outbuf, OUTBUF_LEN, "\tCase 1: Both thermostats are %s",
+      (isHeating(nesta) ? "heating" : "cooling"));
     Serial.println(outbuf);
   } else if (isHeating(nesta) || isCooling(nesta)) {
     // if 2 thermostats are in different Heat/AC modes, "A" wins
@@ -124,7 +123,7 @@ void loop() {
     setVent(VENT_A, VENT_OPEN);
     setVent(VENT_B, VENT_CLOSED);
 
-    snprintf(outbuf, OUTBUF_LEN, "Case 2: Thermostat A is %s, it wins.",
+    snprintf(outbuf, OUTBUF_LEN, "\tCase 2: Thermostat A is %s, it wins.",
       (isHeating(nesta) ? "heating" : "cooling"));
     Serial.println(outbuf);
   } else if (isHeating(nestb) || isCooling(nestb)) {
@@ -134,27 +133,33 @@ void loop() {
     setVent(VENT_A, VENT_CLOSED);
     setVent(VENT_B, VENT_OPEN);
     
-    snprintf(outbuf, OUTBUF_LEN, "Case 3: Thermostat B is %s, it wins.",
+    snprintf(outbuf, OUTBUF_LEN, "\tCase 3: Thermostat B is %s, it wins.",
       (isHeating(nestb) ? "heating" : "cooling"));
     Serial.println(outbuf);
+  } else if (isBlowing(nesta) && isBlowing(nestb)) {
+    setHVACFromNest(nesta);
+    setVent(VENT_A, VENT_OPEN);
+    setVent(VENT_B, VENT_OPEN);
+    
+    Serial.println("\tCase 4: Both thermostats are blowing.");
   } else if (isBlowing(nesta)) {
     setHVACFromNest(nesta);
     setVent(VENT_A, VENT_OPEN);
     setVent(VENT_B, VENT_CLOSED);
 
-    Serial.println("Case 4: Thermostat A is blowing, it wins.");
+    Serial.println("\tCase 5: Thermostat A is blowing, it wins.");
   } else if (isBlowing(nestb)) {
     setHVACFromNest(nestb);
     setVent(VENT_A, VENT_CLOSED);
     setVent(VENT_B, VENT_OPEN);
 
-    Serial.println("Case 5: Thermostat B is blowing, it wins.");
+    Serial.println("\tCase 6: Thermostat B is blowing, it wins.");
   } else { // neither thermostat doing anything...
     // assert everything is off;
     setHVACFromNest(nesta);
     setVent(VENT_A, VENT_OPEN);
     setVent(VENT_B, VENT_OPEN);
-    Serial.println("Case 6: Neither thermostat doing anything.");
+    Serial.println("\tCase 7: Neither thermostat doing anything.");
   }
 
   delay(1000);  
