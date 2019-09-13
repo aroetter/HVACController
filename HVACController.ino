@@ -70,15 +70,16 @@ void   debugCycle3OutputLEDs() {
 
 }
 
-int isHeating(struct NestState nest) {
+// Helper methods for querying the state of a given nest
+bool isHeating(struct NestState nest) {
   return nest.W1;
 }
 
-int isCooling(struct NestState nest) {
+bool isCooling(struct NestState nest) {
   return nest.Y1;
 }
 
-int isBlowing(struct NestState nest) {
+bool isBlowing(struct NestState nest) {
   return nest.G;
 }
 
